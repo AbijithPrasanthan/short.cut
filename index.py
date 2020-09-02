@@ -26,10 +26,11 @@ def main():
     short = create()
     cur.execute('INSERT OR IGNORE INTO url (long,short) VALUES ( ?, ?) ',( url, short))
     cur.execute('SELECT short FROM url where long = ?',(url,))
+    print("Short URL: ")
+    conn.commit()
 
 if __name__ == "__main__":
     main()    
 
     #cur.execute('''INSERT OR IGNORE INTO Album (title, artist_id) 
     #    VALUES ( ?, ? )''', ( album, artist_id ) )
-    
