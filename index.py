@@ -19,7 +19,6 @@ def create():
     short = ''
     short += dom
     short += ''.join(random.choice(letters) for i in range(length))     
-    print("Short URL:",short)
     return short
 
 def main():
@@ -27,7 +26,7 @@ def main():
     url = input('Enter the URL: ')
     short = create()
     cur.execute('INSERT INTO url (long,short) VALUES ( ?, ?) ',( url, short))
-
+    print("Short URL:",cur.fetchone()[0])
 if __name__ == "__main__":
     main()    
 
