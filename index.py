@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+
 import sqlite3
 import string
 import random
@@ -28,6 +29,8 @@ def main():
     cur.execute('SELECT short FROM url where long = ?',(url,))
     conn.commit()
 
+    cur.execute('INSERT INTO url (long,short) VALUES ( ?, ?) ',( url, short))
+    print("Short URL:",cur.fetchone()[0])
 if __name__ == "__main__":
     main()    
 
