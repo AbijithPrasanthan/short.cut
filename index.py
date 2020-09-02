@@ -18,14 +18,15 @@ def create():
     short = ''
     short += dom
     short += ''.join(random.choice(letters) for i in range(length))     
-    print(short)
     return short
 
 def main():
     init()
     url = input('Enter the URL: ')
     short = create()
-    cur.execute('INSERT INTO url (long,short) VALUES ( ?, ?) ',( url, short))
+    cur.execute('INSERT OR IGNORE INTO url (long,short) VALUES ( ?, ?) ',( url, short))
+    cur.execute('SELECT short FROM url where long = ?',(url,))
+    conn.commit()
 
 if __name__ == "__main__":
     main()    
