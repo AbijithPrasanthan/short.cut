@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+
 import sqlite3
 import string
 import random
@@ -18,7 +19,7 @@ def create():
     short = ''
     short += dom
     short += ''.join(random.choice(letters) for i in range(length))     
-    print(short)
+    print("Short URL:",short)
     return short
 
 def main():
