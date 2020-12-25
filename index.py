@@ -34,5 +34,3 @@ def main():
 if __name__ == "__main__":
     main()    
 
-    #cur.execute('''INSERT OR IGNORE INTO Album (title, artist_id) 
-    #    VALUES ( ?, ? )''', ( album, artist_id ) )
