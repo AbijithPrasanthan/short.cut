@@ -1,0 +1,39 @@
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+body {
+    background-color: black;
+}
+
+.main-content {
+    color: #fff;
+}
+
+.heading {
+    position: absolute;
+    font-family: 'Audiowide', cursive;
+    font-size: 5em;
+    position: relative;
+}
+
+.label-name {
+    position: relative;
+    left: 27%;
+    font-size: 3em;
+    padding: 10px;
+    margin: 23px;
+}
+
+.short-inp {
+    margin: 10px;
+    position: relative;
+    color: #000;
+    left: 27%;
+    /*height: 3em;*/
+    width: 20em;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 30px;
+}
