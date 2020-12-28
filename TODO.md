@@ -1,11 +1,11 @@
 
 ## BACKEND
-    [ ] make unique short URL
-    [ ] make connection to database
-    [ ] insert short and long URLs
+    [x] make unique short URL
+    [x] make connection to database
+    [x] insert short and long URLs
 
 ## FRONTEND
-    [ ] make a simple webpage
+    [x] make a simple webpage
         [ ] flask/django
         [ ] form to accept a long URL
         [ ] Loading screen
