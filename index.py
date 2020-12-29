@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-
 from flask import *
 import sqlite3
 import string
@@ -53,6 +52,8 @@ def main():
     init()
     app.run(host="0.0.0.0", port='5200',debug=True)
 
+    cur.execute('INSERT INTO url (long,short) VALUES ( ?, ?) ',( url, short))
+    print("Short URL:",cur.fetchone()[0])
 if __name__ == "__main__":
     main()    
 
