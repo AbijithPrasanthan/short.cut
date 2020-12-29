@@ -13,10 +13,11 @@ dom = 'short.cut/'
 length = 8
 letters = string.ascii_letters
 
-conn = sqlite3.connect('main.db')
-cur = conn.cursor()
+
 
 def init():
+    conn = sqlite3.connect('main.db')
+    cur = conn.cursor()
     cur.executescript('CREATE TABLE IF NOT EXISTS url(id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,long varchar(200),short varchar(50));')
 
 def create():
@@ -27,9 +28,18 @@ def create():
 
 @app.route('/long',methods=['GET','POST'])
 def displayLong():
+    conn = sqlite3.connect('main.db')
+
     if(request.method == 'POST'):
-        short = request.form['text']
+
+        cur = conn.cursor()
+
+        long = request.form['text']
+        short = create()
+        cur.execute('INSERT OR IGNORE INTO url (long,short) VALUES ( ?, ?) ',(long, short))
         flash(short)
+
+        conn.commit()
     return render_template('long.html')
 
 @app.route('/',methods = ['GET','POST'])
@@ -40,13 +50,8 @@ def index():
     return render_template('index.html')
 
 def main():
-    '''init()
-    url = input('Enter the URL: ')
-    short = create()
-    cur.execute('INSERT OR IGNORE INTO url (long,short) VALUES ( ?, ?) ',( url, short))
-    cur.execute('SELECT short FROM url where long = ?',(url,))'''
+    init()
     app.run(host="0.0.0.0", port='5200',debug=True)
-    #conn.commit()
 
 if __name__ == "__main__":
     main()    
