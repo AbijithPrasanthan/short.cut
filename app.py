@@ -40,6 +40,17 @@ def isValid(long):
     else:
         return False
 
+def checkIfNotExists(short):
+    conn = sqlite3.connect('main.db')
+    cur = conn.cursor()
+    cur.execute('SELECT * from url where short = ?',(short,))
+    res = cur.fetchone()
+
+    if(res):
+        return False
+    else:
+        return True
+
 @app.route('/long',methods=['GET','POST'])
 def displayLong():
     conn = sqlite3.connect('main.db')
@@ -53,8 +64,11 @@ def displayLong():
             cur.execute('SELECT short FROM url where long = ?',(long,))
             fetch_data = cur.fetchone()
             if(not fetch_data):
-                short = create()
-                cur.execute('INSERT OR IGNORE INTO url (long,short) VALUES ( ?, ?) ',(long, short))
+                short = ''
+                while(not checkIfNotExists(short)):
+                    short = create()
+                    if(checkIfNotExists(short)):
+                        cur.execute('INSERT OR IGNORE INTO url (long,short) VALUES ( ?, ?) ',(long, short))
             else:
                 short = fetch_data[0]
             flash(short)
@@ -75,6 +89,19 @@ def index():
 @app.route('/invalid')
 def invalid():
     return render_template('indexAlert.html')
+
+@app.route('/<short_url>')
+def redirectShort(short_url):
+    conn = sqlite3.connect('main.db')
+    cur = conn.cursor()
+
+    cur.execute('SELECT long FROM url where short = ?',('short.cut/' + short_url,))
+    long = cur.fetchone()
+    if(long):
+        return redirect(long[0])
+    else:
+        flash('Invalid URL')
+        return render_template('long.html')
 
 def main():
     init()
