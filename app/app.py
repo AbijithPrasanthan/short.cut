@@ -5,8 +5,8 @@ import string
 import random
 import re
 
-app = Flask(__name__)
-app.secret_key = "abc"  
+shortcut = Flask(__name__)
+shortcut.secret_key = "abc"  
 
 
 dom = 'short.cut/'
