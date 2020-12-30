@@ -5,8 +5,8 @@ import string
 import random
 import re
 
-shortcut = Flask(__name__)
-shortcut.secret_key = "abc"  
+app = Flask(__name__)
+app.secret_key = "abc"  
 
 
 dom = 'short.cut/'
@@ -64,19 +64,17 @@ def displayLong():
             cur.execute('SELECT short FROM url where long = ?',(long,))
             fetch_data = cur.fetchone()
             if(not fetch_data):
-                short = ''
-                while(not checkIfNotExists(short)):
-                    short = create()
-                    if(checkIfNotExists(short)):
-                        cur.execute('INSERT OR IGNORE INTO url (long,short) VALUES ( ?, ?) ',(long, short))
+                short = create()
+                conn.execute('INSERT INTO URL (long,short) VALUES (?,?)',(long,short,))
             else:
                 short = fetch_data[0]
             flash(short)
+            conn.commit()
 
         else:
             return redirect("invalid")
 
-        conn.commit()
+        
     return render_template('long.html')
 
 @app.route('/',methods = ['GET','POST'])
@@ -103,4 +101,9 @@ def redirectShort(short_url):
         flash('Invalid URL')
         return render_template('long.html')
 
+def main():
+    init()
+    app.run(host="0.0.0.0", port='5200',debug=True)
+if __name__ == "__main__":
+    main()    
 
