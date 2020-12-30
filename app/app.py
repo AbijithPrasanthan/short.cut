@@ -103,9 +103,4 @@ def redirectShort(short_url):
         flash('Invalid URL')
         return render_template('long.html')
 
-def main():
-    init()
-    app.run(host="0.0.0.0", port='5200',debug=True)
-if __name__ == "__main__":
-    main()    
 
