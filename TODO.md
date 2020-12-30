@@ -6,8 +6,8 @@
 
 ## FRONTEND
     [x] make a simple webpage
-        [ ] flask/django
-        [ ] form to accept a long URL
+        [x] flask/django
+        [x] form to accept a long URL
         [ ] Loading screen
 
 ## BACKEND 
