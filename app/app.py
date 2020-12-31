@@ -12,11 +12,11 @@ app.secret_key = "abc"
 dom = 'https://gr1dl0ck.herokuapp.com/'
 length = 4
 letters = string.ascii_letters + '1234567890'
-
+DATABASE_URL = 'postgres://qtnygtouakwayq:9dc9a298313c8bf7c8554d5f10f1230a03aeaa23e79e647a17730db1f0ce504d@ec2-54-175-243-75.compute-1.amazonaws.com:5432/d4g5dn2frm9iqd'
 
 
 def init():
-    conn = sqlite3.connect('main.db')
+    conn = sqlite3.connect(DATABASE_URL)
     cur = conn.cursor()
     print("DB initialised !!!!!")
     cur.executescript('CREATE TABLE IF NOT EXISTS url(id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,long varchar(200),short varchar(50));')
