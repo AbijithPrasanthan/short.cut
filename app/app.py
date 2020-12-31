@@ -9,7 +9,7 @@ app = Flask(__name__)
 app.secret_key = "abc"  
 
 
-dom = 'short.cut/'
+dom = 'https://gr1dl0ck.herokuapp.com/'
 length = 4
 letters = string.ascii_letters + '1234567890'
 
