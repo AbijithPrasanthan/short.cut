@@ -10,7 +10,7 @@ app.secret_key = "abc"
 
 
 dom = 'short.cut/'
-length = 8
+length = 4
 letters = string.ascii_letters + '1234567890'
 
 
@@ -18,12 +18,13 @@ letters = string.ascii_letters + '1234567890'
 def init():
     conn = sqlite3.connect('main.db')
     cur = conn.cursor()
+    print("DB initialised !!!!!")
     cur.executescript('CREATE TABLE IF NOT EXISTS url(id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,long varchar(200),short varchar(50));')
 
 def create():
     short = ''
     short += dom
-    short += ''.join(random.choice(letters) for i in range(length))     
+    short += ''.join(random.choice(letters) for i in range(4))     
     return short
 
 def isValid(long):
@@ -65,17 +66,16 @@ def displayLong():
             fetch_data = cur.fetchone()
             if(not fetch_data):
                 short = create()
-                conn.execute('INSERT INTO URL (long,short) VALUES (?,?)',(long,short,))
+                cur.execute('INSERT OR IGNORE INTO url (long,short) VALUES ( ?, ?) ',(long, short))
             else:
                 short = fetch_data[0]
-            flash(short)
             conn.commit()
+            flash(short)
+            return render_template('long.html')
+
 
         else:
             return redirect("invalid")
-
-        
-    return render_template('long.html')
 
 @app.route('/',methods = ['GET','POST'])
 def index():
@@ -100,10 +100,3 @@ def redirectShort(short_url):
     else:
         flash('Invalid URL')
         return render_template('long.html')
-
-def main():
-    init()
-    app.run(host="0.0.0.0", port='5200',debug=True)
-if __name__ == "__main__":
-    main()    
-
