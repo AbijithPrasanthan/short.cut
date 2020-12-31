@@ -104,7 +104,7 @@ def invalid():
 def redirectShort(short_url):
     conn = sqlite3.connect('main.db')
     cur = conn.cursor()
-    long = Urls.query.filter_by(short=short_url)
+    long = Urls.query.filter_by(short=(dom + short_url))
     if(long != None):
         return redirect(long)
     else:
