@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 from flask import *
+from flask_sqlalchemy import SQLAlchemy
 import sqlite3
 import string
 import random
@@ -7,19 +8,36 @@ import re
 
 app = Flask(__name__)
 app.secret_key = "abc"  
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+db = SQLAlchemy(app)
 
-dom = 'https://gr1dl0ck.herokuapp.com/'
+dom = 'https://short-cut-url.herokuapp.com/'
 length = 4
 letters = string.ascii_letters + '1234567890'
-DATABASE_URL = 'postgres://qtnygtouakwayq:9dc9a298313c8bf7c8554d5f10f1230a03aeaa23e79e647a17730db1f0ce504d@ec2-54-175-243-75.compute-1.amazonaws.com:5432/d4g5dn2frm9iqd'
+#DATABASE_URL = 'postgres://qtnygtouakwayq:9dc9a298313c8bf7c8554d5f10f1230a03aeaa23e79e647a17730db1f0ce504d@ec2-54-175-243-75.compute-1.amazonaws.com:5432/d4g5dn2frm9iqd'
 
 
-def init():
+'''def init():
     conn = sqlite3.connect(DATABASE_URL)
     cur = conn.cursor()
     print("DB initialised !!!!!")
-    cur.executescript('CREATE TABLE IF NOT EXISTS url(id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,long varchar(200),short varchar(50));')
+    cur.executescript('CREATE TABLE IF NOT EXISTS url(id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,long varchar(200),short varchar(50));')'''
+
+@app.before_first_request
+def create_tables():
+    db.create_all()
+
+
+class Urls(db.Model):
+    id_ = db.Column("id_", db.Integer, primary_key=True)
+    long = db.Column("long", db.String())
+    short = db.Column("short", db.String(10))
+
+    def __init__(self, long, short):
+        self.long = long
+        self.short = short
 
 def create():
     short = ''
@@ -41,11 +59,13 @@ def isValid(long):
     else:
         return False
 
-def checkIfNotExists(short):
-    conn = sqlite3.connect('main.db')
+def checkIfNotExists(short_url):
+    '''conn = sqlite3.connect('main.db')
     cur = conn.cursor()
     cur.execute('SELECT * from url where short = ?',(short,))
-    res = cur.fetchone()
+    res = cur.fetchone()'''
+
+    res = Urls.query.filter_by(short=short_url).first()
 
     if(res):
         return False
@@ -54,22 +74,16 @@ def checkIfNotExists(short):
 
 @app.route('/long',methods=['GET','POST'])
 def displayLong():
-    conn = sqlite3.connect('main.db')
-
     if(request.method == 'POST'):
-
-        cur = conn.cursor()
-
-        long = request.form['text']
+        long_url = request.form['text']
         if(isValid(long)):
-            cur.execute('SELECT short FROM url where long = ?',(long,))
-            fetch_data = cur.fetchone()
-            if(not fetch_data):
-                short = create()
-                cur.execute('INSERT OR IGNORE INTO url (long,short) VALUES ( ?, ?) ',(long, short))
-            else:
-                short = fetch_data[0]
-            conn.commit()
+            short = Urls.query.filter_by(long=long_url)
+            if(short == None):
+                short_url = create()
+                new_url = Urls(long_url, short_url)
+                db.session.add(new_url)
+                db.session.commit()
+
             flash(short)
             return render_template('long.html')
         else:
@@ -90,11 +104,9 @@ def invalid():
 def redirectShort(short_url):
     conn = sqlite3.connect('main.db')
     cur = conn.cursor()
-
-    cur.execute('SELECT long FROM url where short = ?',('short.cut/' + short_url,))
-    long = cur.fetchone()
-    if(long):
-        return redirect(long[0])
+    long = Urls.query.filter_by(short=short_url)
+    if(long != None):
+        return redirect(long)
     else:
         flash('Invalid URL')
         return render_template('long.html')
