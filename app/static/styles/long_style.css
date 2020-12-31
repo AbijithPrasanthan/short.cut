@@ -8,8 +8,8 @@ body {
     background-color: black;
 }
 
-.main-content {
-    color: #fff;
+h1 {
+    color: white;
 }
 
 .short {
@@ -17,4 +17,5 @@ body {
     font-family: 'Audiowide', cursive;
     font-size: 5em;
     position: relative;
+    color: white;
 }
