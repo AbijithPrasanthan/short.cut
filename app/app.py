@@ -72,8 +72,6 @@ def displayLong():
             conn.commit()
             flash(short)
             return render_template('long.html')
-
-
         else:
             return redirect("invalid")
 
